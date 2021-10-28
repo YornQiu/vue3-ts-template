@@ -1,0 +1,17 @@
+@import './styles/base.css';
+@import './styles/fonts/fonts.css';
+@import './styles/icons/icons.css';
+@import './cover.scss';
+
+html,
+body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+  color: $text-color;
+  font-size: $font-size;
+  background-color: $bg-color;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}

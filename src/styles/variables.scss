@@ -1,0 +1,27 @@
+// theme-color 主题色
+$theme-color: #0366d6;
+$theme-color-dark: darken($theme-color, 20%);
+$theme-color-light: lighten($theme-color, 20%);
+$theme-color-hover: saturate($theme-color, 20%);
+$theme-color-active: saturate($theme-color, 20%);
+$theme-color-disabled: desaturate($theme-color, 20%);
+
+// text-color 文字颜色
+$text-color: #030b1a;
+$text-color-s: #071f49;
+
+// background-color 背景色
+$bg-color: #fff;
+$bg-color-header: #24292e;
+$bg-color-aside: #fff;
+$bg-color-content: #f6f8fa;
+
+// border 边框
+$border-width: 1px;
+$border-radius: 0;
+$border-color: #0366d6;
+
+// font-size 字体
+$font-size: 14px;
+$font-size-s: 12px;
+$font-size-l: 18px;
