@@ -1,5 +1,5 @@
 // theme-color 主题色
-$theme-color: #0366d6;
+$theme-color: #0e78df;
 $theme-color-dark: darken($theme-color, 20%);
 $theme-color-light: lighten($theme-color, 20%);
 $theme-color-hover: saturate($theme-color, 20%);
@@ -7,21 +7,45 @@ $theme-color-active: saturate($theme-color, 20%);
 $theme-color-disabled: desaturate($theme-color, 20%);
 
 // text-color 文字颜色
-$text-color: #030b1a;
-$text-color-s: #071f49;
+$text-color: #fff;
+$text-color-dark: #8f9aa5;
+$text-color-light: #1ab2ff;
 
 // background-color 背景色
-$bg-color: #fff;
-$bg-color-header: #24292e;
-$bg-color-aside: #fff;
-$bg-color-content: #f6f8fa;
+$bg-color: #041029;
+$bg-color-aside: #0e2645;
+$bg-color-header: #032045;
+$bg-color-footer: #032045;
+$bg-color-content: #041029;
 
 // border 边框
+$border-color: #00aaff;
 $border-width: 1px;
 $border-radius: 0;
-$border-color: #0366d6;
+$border-type: solid;
+$border-base: $border-width solid $border-color;
 
 // font-size 字体
 $font-size: 14px;
 $font-size-s: 12px;
 $font-size-l: 18px;
+
+@mixin border($width: $border-width, $type: $border-type, $color: $border-color) {
+  border: $width $type $color;
+}
+@mixin borderWidth($width: $border-width) {
+  border: $width $border-type $border-color;
+}
+@mixin borderType($type: solid) {
+  border: $border-width $type $border-color;
+}
+@mixin borderColor($color: $border-color) {
+  border: $border-width $border-type $color;
+}
+
+@mixin textShadow($color: rgba($text-color-light, 0.2)) {
+  box-shadow: 0 0 2px 2px $color;
+}
+@mixin boxShadow($color: rgba($border-color, 0.2)) {
+  box-shadow: 0 0 5px 5px $color;
+}

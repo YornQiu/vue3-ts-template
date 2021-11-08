@@ -2,9 +2,9 @@
  * @Author: YornQiu
  * @Date: 2021-09-14 11:17:45
  * @LastEditors: YornQiu
- * @LastEditTime: 2021-10-27 18:26:40
+ * @LastEditTime: 2021-11-08 11:27:59
  * @Description: 输入校验工具
- * @FilePath: \vue3-ts-template\src\utils\validateUtils.ts
+ * @FilePath: /vue3-ts-template/src/utils/validateUtils.ts
  */
 
 interface ValidateOption {
@@ -363,4 +363,4 @@ const validateUtils = {
   },
 };
 
-export default Object.freeze(validateUtils);
+export default validateUtils;
