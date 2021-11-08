@@ -2,9 +2,9 @@
  * @Author: YornQiu
  * @Date: 2021-04-10 20:33:12
  * @LastEditors: YornQiu
- * @LastEditTime: 2021-07-16 14:58:07
+ * @LastEditTime: 2021-11-08 11:02:40
  * @Description: vue directives
- * @FilePath: \vue3-ts-template\src\directives\index.ts
+ * @FilePath: /vue3-ts-template/src/directives/index.ts
  */
 import { App, Directive, DirectiveBinding } from 'vue';
 
@@ -110,7 +110,7 @@ const directives: Directives = {
  * Usage: Vue.use(directives)
  */
 export default {
-  install(app: App<Element>): void {
+  install(app: App): void {
     Object.keys(directives).forEach((key: string) => {
       app.directive(key, directives[key]);
     });
