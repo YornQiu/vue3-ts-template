@@ -1,14 +1,12 @@
 <template>
-  <div id="app" class="dfc">
-    <TheFrameHeader />
-    <el-container>
-      <TheFrameAside />
-      <el-main class="frame-content">
-        <router-view />
-      </el-main>
-    </el-container>
-    <TheFrameFooter />
-  </div>
+  <TheFrameHeader />
+  <el-container>
+    <TheFrameAside />
+    <el-main class="frame-content">
+      <router-view />
+    </el-main>
+  </el-container>
+  <TheFrameFooter />
 </template>
 
 <script setup lang="ts">
