@@ -2,56 +2,73 @@
  * @Author: YornQiu
  * @Date: 2021-01-18 09:06:38
  * @LastEditors: YornQiu
- * @LastEditTime: 2021-10-20 16:23:36
+ * @LastEditTime: 2021-12-08 18:39:22
  * @Description: 样式覆盖
- * @FilePath: \vue3-ts-template\src\styles\cover.scss
+ * @FilePath: /vue3-ts-template/src/styles/cover.scss
  */
 
 /* 
  * 变量覆盖 
- * 仅包含常用变量，其他所有变量可参见element-ui目录下的var.scss
+ * 仅包含常用变量，其他所有变量可参见element-plus目录下的var.scss
  */
-// 主题色 * 5
-$--color-primary: #0366d6 !default;
-$--color-success: #20b689 !default;
-$--color-warning: #dfa11c !default;
-$--color-danger: #e62a52 !default;
-$--color-info: #4d77cc !default;
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  // 主题色 * 5
+  $color-primary: #19539b !default,
+  $color-success: #67C23A !default,
+  $color-warning: #E6A23C !default,
+  $color-danger: #F56C6C !default,
+  $color-info: #909399 !default,
 
-// 文字颜色
-$--color-text-primary: #E6E1C2 !default;
-$--color-text-regular: #606266 !default;
-$--color-text-secondary: #909399 !default;
-$--color-text-placeholder: #C0C4CC !default;
+  // 文字颜色
+  $text-color: (
+    'primary': #303133,
+    'regular': #606266,
+    'secondary': #606266,
+    'placeholder': #C0C4CC,
+  ),
 
-// 边框颜色
-$--border-color-base: #DCDFE6 !default;
-$--border-color-light: #E4E7ED !default;
-$--border-color-lighter: #EBEEF5 !default;
-$--border-color-extra-light: #F2F6FC !default;
+  // 边框颜色
+  $border-color: (
+    'base': #DCDFE6,
+    'light': #E4E7ED,
+    'lighter': #EBEEF5,
+    'extra-light': #F2F6FC,
+  ),
 
-// 背景颜色
-$--background-color-base: #051932 !default;
+  // 背景颜色
+  $background-color-base: #e9eef3,
 
-/* -------------------------- */
+  /* -------------------------- */
 
-// 字体
-$--font-size-base: 14px !default;
+  // 字体
+  $font-size: (
+    'extra-large': 20px,
+    'large': 18px,
+    'medium': 16px,
+    'base': 14px,
+    'small': 13px,
+    'extra-small': 12px,
+  ),
 
-// 边框
-$--border-width-base: 1px !default;
-$--border-style-base: solid !default;
-$--border-color-hover: $--color-text-placeholder !default;
-$--border-base: $--border-width-base $--border-style-base $--border-color-base !default;
-$--border-radius-base: 4px !default;
-$--border-radius-small: 2px !default;
-$--border-radius-circle: 100% !default;
-$--border-radius-zero: 0 !default;
+  // 边框
+  $border-width-base: 1px !default,
+  $border-style-base: solid !default,
+  $border-color-hover: #C0C4CC !default,
+  $border-base: 1px solid #DCDFE6 !default,
+  $border-radius: (
+    'base': 4px,
+    'small': 2px,
+    'round': 20px,
+    'circle': 100%,
+    'zero': 0
+  ),
 
-// 阴影
-$--box-shadow-base: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04) !default;
-$--box-shadow-dark: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .12) !default;
-$--box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !default;
+  // 阴影
+  $box-shadow: (
+    'base': (0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)),
+    'light': 0 2px 12px 0 rgba(0, 0, 0, 0.1),
+  ),
+);
 
 
 /* 
@@ -60,7 +77,5 @@ $--box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !default;
  */
 
 
-/* 改变 icon 字体路径变量，必需 */
-$--font-path: 'node_modules/element-plus/lib/theme-chalk/fonts';
-
-@import "node_modules/element-plus/packages/theme-chalk/src/index";
+// 最后引入样式文件
+@use "element-plus/theme-chalk/src/index.scss" as *;
