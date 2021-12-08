@@ -9,36 +9,37 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "axios": "^0.23.0",
+    "axios": "^0.24.0",
     "dayjs": "^1.10.7",
-    "element-plus": "1.1.0-beta.24",
+    "element-plus": "1.2.0-beta.5",
     "lodash": "^4.17.21",
-    "qs": "^6.10.1",
+    "qs": "^6.10.2",
     "vue": "^3.2.20",
     "vue-router": "^4.0.11",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@types/node": "^16.11.1",
+    "@types/node": "^16.11.12",
     "@types/qs": "^6.9.7",
-    "@typescript-eslint/eslint-plugin": "^5.1.0",
-    "@typescript-eslint/parser": "^5.1.0",
-    "@vitejs/plugin-vue": "^1.9.3",
-    "@vue/compiler-sfc": "^3.2.20",
-    "autoprefixer": "10.3.7",
+    "@typescript-eslint/eslint-plugin": "^5.6.0",
+    "@typescript-eslint/parser": "^5.6.0",
+    "@vitejs/plugin-vue": "^1.10.2",
+    "@vue/compiler-sfc": "^3.2.24",
+    "autoprefixer": "10.4.0",
     "dart-sass": "^1.25.0",
-    "eslint": "^8.0.1",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^7.20.0",
-    "postcss": "^8.3.9",
-    "postcss-loader": "^6.2.0",
-    "prettier": "^2.4.1",
-    "sass": "^1.43.2",
-    "sass-loader": "^12.2.0",
-    "typescript": "^4.4.4",
-    "vite": "^2.6.10",
-    "vite-plugin-pwa": "^0.11.6",
-    "vue-eslint-parser": "^8.0.0"
+    "eslint-plugin-vue": "^8.2.0",
+    "postcss": "^8.4.4",
+    "postcss-loader": "^6.2.1",
+    "prettier": "^2.5.1",
+    "sass": "^1.44.0",
+    "sass-loader": "^12.4.0",
+    "typescript": "^4.5.2",
+    "vite": "^2.6.14",
+    "vite-plugin-pwa": "^0.11.10",
+    "vue-eslint-parser": "^8.0.1"
   },
   "eslintConfig": {
     "root": true,
@@ -47,11 +48,12 @@
     },
     "extends": [
       "plugin:vue/vue3-essential",
-      "eslint:recommended",
-      "@vue/typescript/recommended"
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended"
     ],
     "parser": "vue-eslint-parser",
     "parserOptions": {
+      "parser": "@typescript-eslint/parser",
       "ecmaVersion": 2020,
       "ecmaFeatures": {
         "jsx": true
@@ -62,10 +64,6 @@
       "dayjs": false,
       "$http": false,
       "$utils": false
-    },
-    "rules": {
-      "no-debugger": 0,
-      "no-console": 0
     }
   },
   "browserslist": [
@@ -73,11 +71,6 @@
     "last 2 versions",
     "not dead"
   ],
-  "babel": {
-    "presets": [
-      "@vue/cli-plugin-babel/preset"
-    ]
-  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}
