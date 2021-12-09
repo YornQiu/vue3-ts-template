@@ -1,8 +1,5 @@
 <template>
-  <footer class="frame-footer">
-    Footer
-  </footer>
+  <footer class="frame-footer">Footer</footer>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>

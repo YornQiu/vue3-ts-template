@@ -1,8 +1,5 @@
 <template>
-  <aside class="frame-aside">
-    Aside
-  </aside>
+  <aside class="frame-aside">Aside</aside>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
