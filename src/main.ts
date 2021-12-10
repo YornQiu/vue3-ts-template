@@ -12,6 +12,10 @@ import '@/styles/index.scss';
 import GlobalComponents from '@/components';
 import directives from '@/directives';
 
+import utils from '@/utils';
+
+window.$utils = utils;
+
 // eslint-disable-next-line prettier/prettier
 createApp(App)
   .use(GlobalComponents)

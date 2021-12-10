@@ -2,9 +2,9 @@
  * @Author: YornQiu
  * @Date: 2020-12-03 16:44:42
  * @LastEditors: YornQiu
- * @LastEditTime: 2021-10-27 18:00:11
+ * @LastEditTime: 2021-12-10 17:58:55
  * @Description: 数值格式化工具
- * @FilePath: \vue3-ts-template\src\utils\numberUtils.ts
+ * @FilePath: /vue3-ts-template/src/utils/numberUtils.ts
  */
 
 interface FormatOption {
@@ -23,7 +23,7 @@ const formatUnit = {
   1000: 'k',
   1000000: 'M',
   1000000000: 'G',
-}
+};
 
 const numberUtils = {
   // 数值格式化的单位映射
@@ -34,7 +34,7 @@ const numberUtils = {
    * @param {number} deg 保留小数点位数，默认2位，小于0时保持原有的小数位数
    * @return {string}
    */
-   addKannma(value: number, deg: number = 2): string {
+  addKannma(value: number, deg = 2): string {
     let num = `${value}`;
     num = num.replace(new RegExp(',', 'g'), '');
     // 正负号处理
@@ -88,7 +88,7 @@ const numberUtils = {
         };
       }
       value = Number(value);
-      let deg = option.deg || 0;
+      const deg = option.deg || 0;
 
       if (option.type === 'num') {
         if (option.autoUnit) {
@@ -167,11 +167,12 @@ const numberUtils = {
    * @param {object} option 其他适用于format的参数
    * @return {string} 格式化后的数值为String
    */
-  financeFormat(value: number, isPercent: boolean = false, option: object): string {
+  financeFormat(value: number, isPercent = false, option: object): string {
     return this.format(value, {
       type: isPercent ? 'percent' : 'num',
       kannma: true,
       deg: 2,
+      ...option,
     });
   },
 };

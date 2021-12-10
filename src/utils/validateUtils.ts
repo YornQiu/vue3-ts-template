@@ -2,7 +2,7 @@
  * @Author: YornQiu
  * @Date: 2021-09-14 11:17:45
  * @LastEditors: YornQiu
- * @LastEditTime: 2021-11-08 11:27:59
+ * @LastEditTime: 2021-12-10 18:02:51
  * @Description: 输入校验工具
  * @FilePath: /vue3-ts-template/src/utils/validateUtils.ts
  */
@@ -14,6 +14,8 @@ interface ValidateOption {
   length?: number;
 }
 
+type CBFunc = (msg: string) => void;
+
 const validateUtils = {
   /**
    * @description: 验证输入值是否合法
@@ -22,7 +24,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validate(value: string, option: ValidateOption = {}, cb: Function): boolean {
+  validate(value: string, option: ValidateOption = {}, cb: CBFunc): boolean {
     const { required = true, type, name, length } = option;
     if (required && !this.validateRequired(value, name, cb)) {
       return false;
@@ -68,7 +70,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateRequired(value: string, name: string | undefined, cb: Function): boolean {
+  validateRequired(value: string, name: string | undefined, cb: CBFunc): boolean {
     if (value === undefined || value === null || value === '') {
       cb && cb(`${name || '输入值'}不能为空`);
       return false;
@@ -84,7 +86,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateLength(value: string, range: number | Array<number>, name: string | undefined, cb: Function): boolean {
+  validateLength(value: string, range: number | Array<number>, name: string | undefined, cb: CBFunc): boolean {
     const length = value.length;
 
     if (!isNaN(range as unknown as number) && range > 0) {
@@ -110,7 +112,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateNumber(value: string, name: string | undefined, cb: Function): boolean {
+  validateNumber(value: string, name: string | undefined, cb: CBFunc): boolean {
     if (isNaN(value as unknown as number)) {
       cb && cb(`${name || '输入值'}必须为数字`);
       return false;
@@ -125,7 +127,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} 为整数时返回false，不为整数时返回错误信息
    */
-  validateInt(value: string, name: string | undefined, cb: Function): boolean {
+  validateInt(value: string, name: string | undefined, cb: CBFunc): boolean {
     const reg = /^-?[1-9][0-9]*$/;
     if (isNaN(value as unknown as number) || !reg.test(value)) {
       cb && cb(`${name || '输入值'}必须为整数`);
@@ -141,7 +143,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateSpace(value: string, name: string | undefined, cb: Function): boolean {
+  validateSpace(value: string, name: string | undefined, cb: CBFunc): boolean {
     if (/\s/.test(value)) {
       cb && cb(`${name || '输入值'}中不能含有空格`);
       return false;
@@ -156,7 +158,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateChar(value: string, name: string | undefined, cb: Function): boolean {
+  validateChar(value: string, name: string | undefined, cb: CBFunc): boolean {
     const reg = /[&#\\/:*?'"<>|]+/;
     if (!reg.test(value)) {
       cb && cb(`${name || ''}不能含有特殊字符 & # \\ / : * ? ' " < > |`);
@@ -172,7 +174,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateUsername(value: string, name: string | undefined, cb: Function): boolean {
+  validateUsername(value: string, name: string | undefined, cb: CBFunc): boolean {
     const reg = /^[a-zA-Z]{1}([a-zA-Z0-9]){7,}$/;
     if (!reg.test(value)) {
       cb && cb(`${name || '用户名'}格式错误`);
@@ -188,7 +190,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validatePassword(value: string, name: string | undefined, cb: Function): boolean {
+  validatePassword(value: string, name: string | undefined, cb: CBFunc): boolean {
     if (value.length < 8 || value.length > 16) {
       cb && cb(`${name || '密码'}长度需在8到16个字符之间`);
       return false;
@@ -211,7 +213,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateMail(value: string, name: string | undefined, cb: Function): boolean {
+  validateMail(value: string, name: string | undefined, cb: CBFunc): boolean {
     const reg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
     if (!reg.test(value)) {
       cb && cb(`${name || '邮箱'}格式错误`);
@@ -227,7 +229,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateMobile(value: string, name: string | undefined, cb: Function): boolean {
+  validateMobile(value: string, name: string | undefined, cb: CBFunc): boolean {
     const reg = /^1[345678][0-9]{9}$/;
     if (!reg.test(value)) {
       cb && cb(`${name || '手机号码'}格式错误`);
@@ -243,7 +245,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateTel(value: string, name: string | undefined, cb: Function): boolean {
+  validateTel(value: string, name: string | undefined, cb: CBFunc): boolean {
     const reg = /^0\d{2,3}-?\d{7,8}-?\d{0,4}$/;
     if (!reg.test(value)) {
       cb && cb(`${name || '电话号码'}格式错误`);
@@ -258,7 +260,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateCard(value: string, cb: Function): boolean {
+  validateCard(value: string, cb: CBFunc): boolean {
     const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
     if (!reg.test(value)) {
       cb && cb('身份证格式错误');
@@ -338,7 +340,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateIp(value: string, cb: Function): boolean {
+  validateIp(value: string, cb: CBFunc): boolean {
     const reg = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
     if (!reg.test(value)) {
       cb && cb('IP地址格式错误');
@@ -353,7 +355,7 @@ const validateUtils = {
    * @param {Function} cb 回调函数，可用于在校验失败时弹出提示等
    * @return {boolean} true or false
    */
-  validateMac(value: string, cb: Function): boolean {
+  validateMac(value: string, cb: CBFunc): boolean {
     const reg = /^([a-fA-F0-9]{2}-){5}([a-fA-F0-9]{2})$/;
     if (!reg.test(value)) {
       cb && cb('MAC地址格式错误');
