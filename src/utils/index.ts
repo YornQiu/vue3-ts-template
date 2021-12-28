@@ -216,14 +216,14 @@ const utils = {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open('POST', url);
-      xhr.onload = function () {
+      xhr.onload = () => {
         if (xhr.status === 200) {
           resolve(xhr.response);
         } else {
           reject(xhr.response);
         }
       };
-      xhr.onerror = function () {
+      xhr.onerror = () => {
         reject(xhr.response);
       };
 
