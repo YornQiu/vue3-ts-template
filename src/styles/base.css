@@ -2,9 +2,9 @@
  * @Author: YornQiu
  * @Date: 2020-01-01 00:00:00
  * @LastEditors: YornQiu
- * @LastEditTime: 2021-10-27 11:58:35
+ * @LastEditTime: 2022-01-14 11:39:15
  * @Description: base css 基础样式类，已包含normalize.css
- * @FilePath: \vue3-ts-template\src\styles\base.css
+ * @FilePath: /vue3-ts-template/src/styles/base.css
  */
 
 /**
@@ -49,6 +49,9 @@
 .dtc {
   display: table-cell;
 }
+.dn {
+  display: none;
+}
 
 .flex1 {
   flex: 1;
@@ -90,17 +93,20 @@
 }
 
 .hide {
-  display: none;
+  visibility: hidden;
 }
 .show {
-  display: block;
-}
-.hidden {
-  visibility: hidden;
+  visibility: visible;
 }
 
 .auto {
   overflow: auto;
+}
+.hidden {
+  overflow: hidden;
+}
+.scroll {
+  overflow: scroll;
 }
 
 .clearfix {
@@ -148,11 +154,11 @@
   font-style: italic;
 }
 
-.wrap {
-  white-space: normal;
-}
 .pre {
   white-space: pre;
+}
+.wrap {
+  white-space: normal;
 }
 .nowrap {
   white-space: nowrap;
@@ -173,16 +179,13 @@
   text-align: left;
 }
 
-.cursor-pointer {
+.pointer {
   cursor: pointer;
 }
-.cursor-text {
-  cursor: text;
-}
-.cursor-wait {
+.wait {
   cursor: wait;
 }
-.cursor-not {
+.not-allowed {
   cursor: not-allowed;
 }
 
@@ -539,18 +542,6 @@
 }
 .pl40 {
   padding-left: 40px;
-}
-
-/**
- * Reset
- */
-ul, p {
-  margin: 0;
-  padding: 0;
-}
-
-th {
-  font-weight: normal;
 }
 
 
