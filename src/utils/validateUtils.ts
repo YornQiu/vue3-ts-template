@@ -1,8 +1,8 @@
 /*
- * @Author: YornQiu
+ * @Author: Yorn Qiu
  * @Date: 2021-09-14 11:17:45
- * @LastEditors: YornQiu
- * @LastEditTime: 2021-12-10 18:02:51
+ * @LastEditors: Yorn Qiu
+ * @LastEditTime: 2022-02-24 10:16:30
  * @Description: 输入校验工具
  * @FilePath: /vue3-ts-template/src/utils/validateUtils.ts
  */

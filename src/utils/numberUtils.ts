@@ -1,8 +1,8 @@
 /*
- * @Author: YornQiu
+ * @Author: Yorn Qiu
  * @Date: 2020-12-03 16:44:42
- * @LastEditors: YornQiu
- * @LastEditTime: 2021-12-10 17:58:55
+ * @LastEditors: Yorn Qiu
+ * @LastEditTime: 2022-02-24 10:16:13
  * @Description: 数值格式化工具
  * @FilePath: /vue3-ts-template/src/utils/numberUtils.ts
  */
@@ -58,7 +58,10 @@ const numberUtils = {
       while (re.test(integer)) {
         integer = integer.replace(re, '$1,$2');
       }
-      const result = symble + integer + (decimal && decimal.length > 3 ? this.toFixed(parseFloat(decimal), deg).substring(1) : decimal);
+      const result =
+        symble +
+        integer +
+        (decimal && decimal.length > 3 ? this.toFixed(parseFloat(decimal), deg).substring(1) : decimal);
       return result === '' ? '0' : result;
     }
 

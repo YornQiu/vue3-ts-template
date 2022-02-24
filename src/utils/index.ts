@@ -1,7 +1,7 @@
 /*
- * @Author: YornQiu
+ * @Author: Yorn Qiu
  * @Date: 2020-12-16 15:35:55
- * @LastEditors: YornQiu
+ * @LastEditors: Yorn Qiu
  * @LastEditTime: 2021-12-10 17:51:33
  * @Description: 工具类
  * @FilePath: /vue3-ts-template/src/utils/index.ts
@@ -247,7 +247,10 @@ const utils = {
       const xhr = new XMLHttpRequest();
       xhr.open(method || 'get', url, true);
       xhr.responseType = 'blob';
-      xhr.setRequestHeader('Content-Type', type === 'json' ? 'application/json; charset=utf-8' : 'application/x-www-form-urlencoded');
+      xhr.setRequestHeader(
+        'Content-Type',
+        type === 'json' ? 'application/json; charset=utf-8' : 'application/x-www-form-urlencoded'
+      );
 
       const _params =
         typeof params === 'object'

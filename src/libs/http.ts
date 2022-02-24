@@ -1,14 +1,17 @@
 /*
- * @Author: YornQiu
+ * @Author: Yorn Qiu
  * @Date: 2020-12-15 11:44:23
- * @LastEditors: YornQiu
- * @LastEditTime: 2021-10-28 11:03:19
+ * @LastEditors: Yorn Qiu
+ * @LastEditTime: 2022-02-24 10:22:10
  * @Description: http
- * @FilePath: \vue3-ts-template\src\libs\http.ts
+ * @FilePath: /vue3-ts-template/src/libs/http.ts
  */
-import { default as axios, AxiosPromise, Method, ResponseType } from 'axios';
+
+import type { AxiosPromise, Method, ResponseType } from 'axios';
 import qs from 'qs';
+import axios from 'axios';
 import { ElMessage } from 'element-plus';
+import utils from '@/utils';
 
 interface HttpObjectParams {
   [key: string]: any;
@@ -23,8 +26,8 @@ type HttpParams = HttpObjectParams | FormData | string;
 
 type HttpMethod = (url: string, parmas: HttpParams, config: HttpConfig) => AxiosPromise;
 
-const TOKEN_TYPE = $utils.getItem('token_type') || 'bearer';
-const AUTH_TOKEN = $utils.getItem('access_token');
+const TOKEN_TYPE = utils.getItem('token_type') || 'bearer';
+const AUTH_TOKEN = utils.getItem('access_token');
 
 // axios整体配置
 const instance = axios.create({

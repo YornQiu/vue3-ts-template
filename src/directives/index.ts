@@ -1,12 +1,12 @@
 /*
- * @Author: YornQiu
+ * @Author: Yorn Qiu
  * @Date: 2021-04-10 20:33:12
- * @LastEditors: YornQiu
- * @LastEditTime: 2021-11-08 11:02:40
+ * @LastEditors: Yorn Qiu
+ * @LastEditTime: 2022-02-24 10:22:26
  * @Description: vue directives
  * @FilePath: /vue3-ts-template/src/directives/index.ts
  */
-import { App, Directive, DirectiveBinding } from 'vue';
+import type { App, Directive, DirectiveBinding } from 'vue';
 
 interface Directives {
   [key: string]: Directive;
