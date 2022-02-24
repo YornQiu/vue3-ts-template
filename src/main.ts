@@ -1,26 +1,13 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+
 import App from './App.vue';
 import router from './router';
-import store from './store';
-
-import '@/styles/cover.scss';
 import ElementPlus from 'element-plus';
-import zhCn from 'element-plus/es/locale/lang/zh-cn';
+import 'element-plus/dist/index.css';
 
-import '@/styles/index.scss';
+import '@/styles/index.css';
 
-import GlobalComponents from '@/components';
-import directives from '@/directives';
+const app = createApp(App);
 
-import utils from '@/utils';
-
-window.$utils = utils;
-
-// eslint-disable-next-line prettier/prettier
-createApp(App)
-  .use(GlobalComponents)
-  .use(directives)
-  .use(store)
-  .use(router)
-  .use(ElementPlus, { locale: zhCn })
-  .mount('#app');
+app.use(createPinia()).use(router).use(ElementPlus).mount('#app');

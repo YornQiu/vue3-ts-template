@@ -1,9 +1,9 @@
 /*
- * @Author: YornQiu
+ * @Author: Yorn Qiu
  * @Date: 2021-01-18 09:06:38
- * @LastEditors: YornQiu
- * @LastEditTime: 2021-12-08 18:39:22
- * @Description: 样式覆盖
+ * @LastEditors: Yorn Qiu
+ * @LastEditTime: 2022-02-23 18:14:58
+ * @Description: element-plus 样式覆盖，因使用了css变量覆盖的方式，此文件暂未使用
  * @FilePath: /vue3-ts-template/src/styles/cover.scss
  */
 
@@ -13,17 +13,40 @@
  */
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
   // 主题色 * 5
-  $color-primary: #19539b !default,
-  $color-success: #67C23A !default,
-  $color-warning: #E6A23C !default,
-  $color-danger: #F56C6C !default,
-  $color-info: #909399 !default,
+  $colors: (
+    'white': #ffffff,
+    'black': #000000,
+    'primary': (
+      'base': #19539b,
+    ),
+    'success': (
+      'base': #67C23A,
+    ),
+    'warning': (
+      'base': #E6A23C,
+    ),
+    'danger': (
+      'base': #F56C6C,
+    ),
+    'error': (
+      'base': #F56C6C,
+    ),
+    'info': (
+      'base': #909399,
+    ),
+  ),
+
+  // $color-primary: #19539b !default,
+  // $color-success: #67C23A !default,
+  // $color-warning: #E6A23C !default,
+  // $color-danger: #F56C6C !default,
+  // $color-info: #909399 !default,
 
   // 文字颜色
   $text-color: (
     'primary': #303133,
     'regular': #606266,
-    'secondary': #606266,
+    'secondary': #909399,
     'placeholder': #C0C4CC,
   ),
 
@@ -36,7 +59,7 @@
   ),
 
   // 背景颜色
-  $background-color-base: #e9eef3,
+  $bg-color: #e9eef3 !default,
 
   /* -------------------------- */
 

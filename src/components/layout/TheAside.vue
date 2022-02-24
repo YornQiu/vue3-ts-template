@@ -1,5 +1,5 @@
 <template>
-  <header class="frame-header">Header</header>
+  <aside class="layout-aside">Aside</aside>
 </template>
 
 <script setup lang="ts"></script>
