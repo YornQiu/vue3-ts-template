@@ -2,7 +2,7 @@
  * @Author: Yorn Qiu
  * @Date: 2020-12-15 11:44:23
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2022-02-24 10:22:10
+ * @LastEditTime: 2022-02-28 11:35:41
  * @Description: http
  * @FilePath: /vue3-ts-template/src/libs/http.ts
  */
@@ -14,12 +14,12 @@ import { ElMessage } from 'element-plus';
 import utils from '@/utils';
 
 interface HttpObjectParams {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 interface HttpConfig {
   contentType?: string;
   responseType?: ResponseType;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 type HttpParams = HttpObjectParams | FormData | string;
@@ -31,7 +31,7 @@ const AUTH_TOKEN = utils.getItem('access_token');
 
 // axios整体配置
 const instance = axios.create({
-  baseURL: process.env.VUE_APP_BASEURL,
+  baseURL: import.meta.url,
   headers: {
     Authorization: `${TOKEN_TYPE} ${AUTH_TOKEN}`,
   },
