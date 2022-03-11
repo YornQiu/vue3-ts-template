@@ -2,12 +2,12 @@
  * @Author: Yorn Qiu
  * @Date: 2022-02-25 17:02:56
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2022-02-28 18:26:13
+ * @LastEditTime: 2022-03-11 11:48:29
  * @Description: http
  * @FilePath: \vue3-ts-template\src\libs\http.ts
  */
 
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method, ResponseType } from 'axios';
+import type { AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse, Method, ResponseType } from 'axios';
 
 import qs from 'qs';
 import axios from 'axios';
@@ -21,21 +21,13 @@ interface HttpOptions {
   refreshTokenField?: string;
 }
 
-interface HttpObjectParams {
-  [key: string]: unknown;
-}
-
 interface HttpConfig {
   contentType?: string;
   responseType?: ResponseType;
-  [key: string]: unknown;
+  [key: string]: string | number | boolean | undefined;
 }
 
-interface HttpRetryRequest {
-  (token: string): void;
-}
-
-type HttpParams = HttpObjectParams | FormData | string;
+type HttpParams = FormData | object | string;
 
 export class Http {
   isRefreshing = false; //是否正在刷新token
@@ -45,7 +37,7 @@ export class Http {
   accessTokenField: string;
   refreshTokenField: string;
   instance: AxiosInstance;
-  retryRequests: HttpRetryRequest[] = []; // 重发的请求列表
+  retryRequests: { (token: string): void }[] = []; // 重发的请求列表
 
   constructor(options?: HttpOptions) {
     this.baseURL = options?.baseURL || '';
@@ -115,10 +107,7 @@ export class Http {
   setInterceptors(instance: AxiosInstance) {
     // 对请求进行拦截
     instance.interceptors.request.use(
-      (config) => {
-        console.log(config);
-        return config;
-      },
+      (config) => config,
       (error) => Promise.reject(error)
     );
 
@@ -195,7 +184,7 @@ export class Http {
    * 获取refreshToken
    * @returns {Promise} 获取refreshToken的请求
    */
-  getRefreshToken(): Promise<AxiosResponse> {
+  getRefreshToken(): AxiosPromise<AxiosResponse> {
     const { baseURL, refreshURL } = this;
     const instance = this.createInstance(baseURL, this.getLocalRefreshToken());
 
@@ -210,8 +199,8 @@ export class Http {
     this.instance = this.createInstance(baseURL, this.getLocalToken());
   }
 
-  request(method: Method, url: string, params?: HttpParams, config?: HttpConfig) {
-    return this.instance({
+  request<T>(method: Method, url: string, params?: HttpParams, config?: HttpConfig): Promise<T> {
+    return this.instance.request({
       url,
       method,
       data: method === 'POST' || method === 'PUT' ? params : null,
@@ -228,41 +217,41 @@ export class Http {
    * get，参数为Object，会自动转化为query形式并添加在地址之后
    * @param {string} url 地址
    * @param {object} params 参数
-   * @param {object} config 配置，其中属性名应始终为驼峰式写法
+   * @param {object} config axios配置
    */
-  get(url: string, params?: HttpParams, config?: HttpConfig) {
-    return this.request('GET', url, params, config);
+  get<T>(url: string, params?: HttpParams, config?: HttpConfig) {
+    return this.request<T>('GET', url, params, config);
   }
 
   /**
    * post，参数为Object或FormData，此时content-type为 application/json或multipart/form-data，无需手动指定
    * @param {string} url 地址
    * @param {object|FormData} params 参数
-   * @param {object} config 配置，其中属性名应始终为驼峰式写法
+   * @param {object} config axios配置
    */
-  post(url: string, params: HttpParams, config?: HttpConfig) {
-    return this.request('POST', url, params, config);
+  post<T>(url: string, params?: HttpParams, config?: HttpConfig) {
+    return this.request<T>('POST', url, params, config);
   }
 
   /**
    * post 表单，参数为表单键值对或Object，若为Object则会自动转化为键值对，此时content-type为 application/x-www-form-urlencoded
    * @param {string} url 地址
    * @param {object} params 参数
-   * @param {object} config 配置，其中属性名应始终为驼峰式写法
+   * @param {object} config axios配置
    */
-  postForm(url: string, params: HttpParams, config?: HttpConfig) {
+  postForm<T>(url: string, params?: HttpParams, config?: HttpConfig) {
     if (typeof params === 'object') {
       params = qs.stringify(params);
     }
-    return this.request('POST', url, params, { ...config, contentType: 'application/x-www-form-urlencoded' });
+    return this.request<T>('POST', url, params, { ...config, contentType: 'application/x-www-form-urlencoded' });
   }
 
-  put(url: string, params: HttpParams, config?: HttpConfig) {
-    return this.request('PUT', url, params, config);
+  put<T>(url: string, params?: HttpParams, config?: HttpConfig) {
+    return this.request<T>('PUT', url, params, config);
   }
 
-  delete(url: string, params: HttpParams, config?: HttpConfig) {
-    return this.request('DELETE', url, params, config);
+  delete<T>(url: string, params?: HttpParams, config?: HttpConfig) {
+    return this.request<T>('DELETE', url, params, config);
   }
 }
 
