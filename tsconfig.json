@@ -1,9 +1,7 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "vite.config.*"],
+  "include": ["*.d.ts", "src/**/*", "src/**/*.vue", "vite.config.*"],
   "compilerOptions": {
-    "composite": false,
-    "incremental": false,
     "types": ["node"],
     "baseUrl": ".",
     "paths": {

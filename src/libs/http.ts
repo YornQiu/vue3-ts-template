@@ -2,16 +2,15 @@
  * @Author: Yorn Qiu
  * @Date: 2022-02-25 17:02:56
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2022-03-11 11:48:29
+ * @LastEditTime: 2022-03-31 16:41:45
  * @Description: http
- * @FilePath: \vue3-ts-template\src\libs\http.ts
+ * @FilePath: /vue3-ts-template/src/libs/http.ts
  */
 
 import type { AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse, Method, ResponseType } from 'axios';
 
 import qs from 'qs';
 import axios from 'axios';
-import { ElMessage } from 'element-plus';
 
 interface HttpOptions {
   baseURL?: string;
