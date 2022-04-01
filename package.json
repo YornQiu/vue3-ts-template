@@ -73,7 +73,8 @@
     ],
     "rules": {
       "no-undef": "off"
-    }
+    },
+    "ignorePatterns": ["auto-imports.d.ts", "components.d.ts"]
   },
   "prettier": {
     "singleQuote": true,

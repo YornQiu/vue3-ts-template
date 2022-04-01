@@ -2,7 +2,7 @@
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": ["*.d.ts", "src/**/*", "src/**/*.vue", "vite.config.*"],
   "compilerOptions": {
-    "types": ["node"],
+    "types": ["node", "element-plus/global"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
