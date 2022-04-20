@@ -3,6 +3,10 @@
 @import './icons/icons.css';
 @import './element-plus.scss';
 
+*, :before, :after {
+  box-sizing: border-box;
+}
+
 body {
   min-width: 1080px;
   min-height: 100vh;
