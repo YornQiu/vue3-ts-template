@@ -1,4 +1,3 @@
-@import './base.css';
 @import './variables.css';
 @import './fonts/fonts.css';
 @import './icons/icons.css';
@@ -35,6 +34,7 @@ body {
 }
 .layout-content {
   min-height: 100vh;
+  box-sizing: border-box;
   padding-top: var(--layout-header-height);
   padding-left: var(--layout-aside-width);
   background-color: var(--bg-color);
