@@ -2,9 +2,9 @@
  * @Author: Yorn Qiu
  * @Date: 2022-02-17 10:35:28
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2022-03-31 13:27:06
+ * @LastEditTime: 2022-06-09 12:36:19
  * @Description: element-plus css variables and style cover
- * @FilePath: /techfin-data-client/src/styles/element-plus.scss
+ * @FilePath: /vue3-ts-template/src/styles/element-plus.scss
  */
 
 /* 
@@ -46,6 +46,10 @@
   --el-fill-color-dark: var(--base-color-dark)  !important;
   --el-fill-color-darker: var(--base-color-darker)  !important;
   --el-fill-color-blank: var(--base-color-blank)  !important;
+
+  --el-bg-color: var(--bg-color) !important;
+  --el-bg-color-page: var(--bg-color) !important;
+  --el-bg-color-overlay: var(--bg-color) !important;
 
   /* 
     color-scheme: light;

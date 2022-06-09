@@ -2,7 +2,7 @@
  * @Author: Yorn Qiu
  * @Date: 2020-12-03 16:44:42
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2022-02-24 10:16:13
+ * @LastEditTime: 2022-06-09 12:32:25
  * @Description: 数值格式化工具
  * @FilePath: /vue3-ts-template/src/utils/numberUtils.ts
  */
@@ -78,7 +78,7 @@ const numberUtils = {
    * @param {number} option.unit 指定单位换算值
    * @return {string}
    */
-  format(value: number, option: FormatOption): string {
+  format(value: number | string | undefined | null, option: FormatOption): string {
     if (Number.isNaN(value) || value === Infinity || value === -Infinity || value === undefined || value === null) {
       return '-';
     }
@@ -170,7 +170,7 @@ const numberUtils = {
    * @param {object} option 其他适用于format的参数
    * @return {string} 格式化后的数值为String
    */
-  financeFormat(value: number, isPercent = false, option: object): string {
+  financeFormat(value: number | string | undefined | null, isPercent = false, option: object): string {
     return this.format(value, {
       type: isPercent ? 'percent' : 'num',
       kannma: true,
