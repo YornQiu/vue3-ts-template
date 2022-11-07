@@ -2,16 +2,16 @@
  * @Author: Yorn Qiu
  * @Date: 2022-02-25 17:02:56
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2022-03-31 16:41:45
+ * @LastEditTime: 2022-11-07 11:53:38
  * @Description: http
  * @FilePath: /vue3-ts-template/src/libs/http.ts
  */
 
 import type { AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse, Method, ResponseType } from 'axios';
 
-import qs from 'qs';
 import axios from 'axios';
-
+import { ElMessage } from 'element-plus';
+ 
 interface HttpOptions {
   baseURL?: string;
   refreshURL?: string;
@@ -23,10 +23,10 @@ interface HttpOptions {
 interface HttpConfig {
   contentType?: string;
   responseType?: ResponseType;
-  [key: string]: string | number | boolean | undefined;
+  headers?: { [key: string]: string };
 }
 
-type HttpParams = FormData | object | string;
+type HttpParams = FormData | object | string | number;
 
 export class Http {
   isRefreshing = false; //是否正在刷新token
@@ -118,17 +118,16 @@ export class Http {
           if (this.refreshURL) {
             return this.refreshToken(response.config);
           }
-          ElMessage.error('身份状态失效，请重新登录');
-          // window.location.href = `${window.location.origin}/login.html`;
+          ElMessage.error((response.data && response.data.message) || '身份状态失效，请重新登录');
+          setTimeout(() => (window.location.href = `${window.location.origin}/login.html`), 1000);
         } else {
-          if (response?.status === 500) {
-            ElMessage.error('服务器错误，请稍后重试');
-          }
           if (response?.status === 504) {
             ElMessage.error('请求超时');
+          } else {
+            ElMessage.error((response.data && response.data.message) || '服务器错误，请稍后重试');
           }
 
-          return Promise.reject(response);
+          return Promise.reject(response.data);
         }
       }
     );
@@ -171,7 +170,7 @@ export class Http {
         })
         .catch(() => {
           ElMessage.error('身份状态失效，请重新登录');
-          // window.location.href = `${window.location.origin}/login.html`;
+          setTimeout(() => (window.location.href = `${window.location.origin}/login.html`), 1000);
         })
         .finally(() => {
           this.isRefreshing = false;
@@ -207,8 +206,8 @@ export class Http {
       responseType: config?.responseType || 'json',
       headers: {
         'Content-Type': config?.contentType || 'application/json; charset=UTF-8',
+        ...config?.headers,
       },
-      // 若需其他配置，在此处添加。
     });
   }
 
@@ -240,7 +239,9 @@ export class Http {
    */
   postForm<T>(url: string, params?: HttpParams, config?: HttpConfig) {
     if (typeof params === 'object') {
-      params = qs.stringify(params);
+      params = Object.entries(params)
+        .map(([key, value]) => `${key}=${value ?? ''}`)
+        .join('&');
     }
     return this.request<T>('POST', url, params, { ...config, contentType: 'application/x-www-form-urlencoded' });
   }
@@ -254,4 +255,5 @@ export class Http {
   }
 }
 
-export default new Http({ baseURL: '', refreshURL: '/api/user/refresh' });
+export default new Http();
+export { default as axios } from 'axios';
