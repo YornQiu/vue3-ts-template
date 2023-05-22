@@ -2,7 +2,7 @@
  * @Author: Yorn Qiu
  * @Date: 2022-02-25 17:02:56
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2022-11-07 11:53:38
+ * @LastEditTime: 2023-05-22 13:57:16
  * @Description: http
  * @FilePath: /vue3-ts-template/src/libs/http.ts
  */
@@ -11,7 +11,7 @@ import type { AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse, Me
 
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
- 
+
 interface HttpOptions {
   baseURL?: string;
   refreshURL?: string;
@@ -255,5 +255,5 @@ export class Http {
   }
 }
 
-export default new Http();
+export default new Http({ baseURL: '/api' });
 export { default as axios } from 'axios';
