@@ -107,7 +107,7 @@ export class Http {
     // 对请求进行拦截
     instance.interceptors.request.use(
       (config) => config,
-      (error) => Promise.reject(error)
+      (error) => Promise.reject(error),
     );
 
     // 对响应进行拦截
@@ -129,7 +129,7 @@ export class Http {
 
           return Promise.reject(response.data);
         }
-      }
+      },
     );
   }
 

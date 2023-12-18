@@ -2,21 +2,18 @@
  * @Author: Yorn Qiu
  * @Date: 2021-04-10 20:33:12
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2022-02-24 10:22:26
- * @Description: vue directives
+ * @LastEditTime: 2023-12-18 16:44:26
  * @FilePath: /vue3-ts-template/src/directives/index.ts
+ * @Description: common vue directives
  */
-import type { App, Directive, DirectiveBinding } from 'vue';
 
-interface Directives {
-  [key: string]: Directive;
-}
+import type { Directive, DirectiveBinding } from 'vue';
 
 /**
  * v-focus
  * 自动聚焦元素
  */
-const focus: Directive = {
+export const vFocus: Directive = {
   mounted(el: HTMLElement) {
     el.focus();
   },
@@ -26,8 +23,13 @@ const focus: Directive = {
  * v-copy="text"
  * 单击或双击复制文本内容
  */
-const copy: Directive = {
-  mounted(el: any, { value, modifiers }: DirectiveBinding) {
+interface CopyElement extends HTMLElement {
+  handler: () => void;
+  $value: string;
+}
+
+export const vCopy: Directive = {
+  mounted(el: CopyElement, { value, modifiers }: DirectiveBinding) {
     el.$value = value;
     el.handler = () => {
       if (!el.$value) {
@@ -67,11 +69,11 @@ const copy: Directive = {
     el.addEventListener(evt, el.handler);
   },
   // 当传进来的值更新的时候触发
-  updated(el: any, { value }: DirectiveBinding) {
+  updated(el: CopyElement, { value }: DirectiveBinding) {
     el.$value = value;
   },
   // 指令与元素解绑的时候，移除事件绑定
-  unmounted(el: any) {
+  unmounted(el: CopyElement) {
     el.removeEventListener('click', el.handler);
   },
 };
@@ -80,39 +82,26 @@ const copy: Directive = {
  * v-debounce.event:[time]="handler", event为事件类型，默认mouseup，可为空，可选keyup；time为间隔时间，默认800，可为空
  * 防抖
  */
-const debounce: Directive = {
+export const vDebounce: Directive = {
   mounted(el: HTMLElement, { arg, modifiers, value }: DirectiveBinding) {
-    let timer: NodeJS.Timeout;
+    let timer: number;
     const time = arg ? parseInt(arg) : 800;
     const event = modifiers.keyup ? 'keyup' : 'mouseup';
     el.addEventListener(event, () => {
       timer && clearTimeout(timer);
-      timer = setTimeout(() => {
+      timer = window.setTimeout(() => {
         value();
       }, time);
     });
   },
 };
 
-const pin: Directive = (el: any, { arg = 'top', value = 0 }: DirectiveBinding): void => {
-  el.style.position = 'fixed';
-  el.style[arg] = value + 'px';
-};
-
-const directives: Directives = {
-  focus,
-  copy,
-  debounce,
-  pin,
-};
-
 /**
- * Usage: Vue.use(directives)
+ * 图钉
  */
-export default {
-  install(app: App): void {
-    Object.keys(directives).forEach((key: string) => {
-      app.directive(key, directives[key]);
-    });
-  },
+type PositionType = 'top' | 'bottom' | 'left' | 'right';
+
+export const vPin: Directive = (el: HTMLElement, { arg = 'top', value = 0 }: DirectiveBinding): void => {
+  el.style.position = 'fixed';
+  el.style[arg as PositionType] = value + 'px';
 };

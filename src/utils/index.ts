@@ -2,7 +2,7 @@
  * @Author: Yorn Qiu
  * @Date: 2020-12-16 15:35:55
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2023-12-18 16:06:10
+ * @LastEditTime: 2023-12-18 16:45:43
  * @FilePath: /vue3-ts-template/src/utils/index.ts
  * @Description: utils
  */
@@ -31,6 +31,16 @@ interface DownloadFileAjaxOption {
   params?: string | object;
   onprogress?: (e?: ProgressEvent<EventTarget>) => void;
 }
+
+interface TreeNode {
+  id: string;
+  pid: string;
+  children?: TreeNode[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
+
+type Tree = TreeNode | TreeNode[];
 
 const utils = {
   /**
@@ -253,7 +263,7 @@ const utils = {
       xhr.responseType = 'blob';
       xhr.setRequestHeader(
         'Content-Type',
-        type === 'json' ? 'application/json; charset=utf-8' : 'application/x-www-form-urlencoded'
+        type === 'json' ? 'application/json; charset=utf-8' : 'application/x-www-form-urlencoded',
       );
 
       const _params =
@@ -296,7 +306,7 @@ const utils = {
   downloadFile(
     fileName: string,
     content: string | BlobPart,
-    options: BlobPropertyBag = { type: 'text/csv', endings: 'transparent' }
+    options: BlobPropertyBag = { type: 'text/csv', endings: 'transparent' },
   ) {
     const a = document.createElement('a');
     a.download = fileName;
@@ -388,29 +398,92 @@ const utils = {
     return fmt;
   },
 
-  setTheme(theme: string) {
-    const el = document.documentElement;
-    el.setAttribute('theme', theme);
-  },
-  getTheme() {
-    const el = document.documentElement;
-    return el.getAttribute('theme');
-  },
-  addThemeChangeEvent(callback: () => void) {
-    window.addEventListener('theme-change', callback);
-  },
-  triggerThemeChangeEvent() {
-    const event = new Event('theme-change');
-    window.dispatchEvent(event);
-  },
-  removeThemeChangeEvent(callback: () => void) {
-    window.removeEventListener('theme-change', callback);
+  /**
+   * @description: 将扁平数组转化为树或森林
+   * @param {array} nodes 节点数组
+   * @param {string} id 节点的id字段，默认为id
+   * @param {string} pid 节点的父节点id字段，默认为pid
+   * @param {string} children 节点的子节点字段，默认为children
+   * @return {array} 树或森林
+   */
+  generateTree(nodes: Array<TreeNode>, id = 'id', pid = 'pid', children = 'children'): Array<TreeNode> {
+    if (!Array.isArray(nodes)) {
+      return [];
+    }
+
+    const tree: TreeNode[] = [];
+    const treeMap: { [key: string]: TreeNode } = {};
+
+    for (const node of nodes) {
+      treeMap[node[id]] = node;
+    }
+
+    for (const node of nodes) {
+      const pNode = treeMap[node[pid]];
+
+      if (pNode) {
+        (pNode[children] || (pNode[children] = [])).push(node);
+      } else {
+        tree.push(node);
+      }
+    }
+
+    return tree;
   },
 
-  removeEmpty<T extends object>(obj: T): Partial<T> {
-    return Object.entries(obj)
-      .filter(([_, v]) => v !== undefined && v !== null && v !== '')
-      .reduce((pre, [k, v]) => ({ ...pre, [k]: v === Object(v) ? this.removeEmpty(v) : v }), {});
+  /**
+   * @description: 广度优先遍历树
+   * @param {object|array} tree 树或森林
+   * @param {Function} handler 用来处理树节点的方法
+   */
+  BFSTree(tree: Tree, handler: (node: TreeNode) => unknown) {
+    if (!tree || typeof tree !== 'object') return;
+
+    const queue = Array.isArray(tree) ? [...tree] : [tree];
+    let node;
+
+    while (queue.length) {
+      node = queue.shift() as TreeNode;
+      handler && handler(node);
+      node.children && node.children.forEach((child: TreeNode) => queue.push(child));
+    }
+  },
+
+  /**
+   * @description: 广度优先遍历树
+   * @param {object|array} tree 树或森林
+   * @param {Function} handler 用来处理树节点的方法
+   */
+  DFSTree(tree: Tree, handler: (node: TreeNode) => unknown) {
+    if (!tree || typeof tree !== 'object') return;
+
+    const stack = Array.isArray(tree) ? [...tree] : [tree];
+    let node;
+
+    while (stack.length) {
+      node = stack.pop() as TreeNode;
+      handler && handler(node);
+      node.children && node.children.forEach((child: TreeNode) => stack.push(child));
+    }
+  },
+
+  /**
+   * @description: 获取树中的某一个节点，得到一个节点后直接返回，不会继续查找
+   * @param {object|array} tree 树或森林
+   * @param {string} id 要获取的节点id
+   * @return {object|undefined} 要获取的节点，未找到时返回undefined
+   */
+  getTreeNode(tree: Tree, id: string): TreeNode | undefined {
+    if (!tree || typeof tree !== 'object') return;
+
+    const queue = Array.isArray(tree) ? [...tree] : [tree];
+    let node;
+
+    while (queue.length) {
+      node = queue.shift() as TreeNode;
+      if (node.id === id) return node;
+      node.children && node.children.forEach((child: TreeNode) => queue.push(child));
+    }
   },
 };
 

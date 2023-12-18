@@ -4,7 +4,7 @@
  * @LastEditors: Yorn Qiu
  * @LastEditTime: 2023-12-18 16:03:31
  * @FilePath: /vue3-ts-template/src/utils/numberUtils.ts
- * @Description: number format utils 
+ * @Description: number format utils
  */
 
 interface FormatOption {

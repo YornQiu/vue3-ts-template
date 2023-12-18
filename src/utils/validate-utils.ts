@@ -5,7 +5,7 @@
  * @LastEditTime: 2023-12-18 16:03:49
  * @FilePath: /vue3-ts-template/src/utils/validateUtils.ts
  * @Description: input value validate utils
- */ 
+ */
 
 interface ValidateOption {
   type?: string;
