@@ -2,15 +2,15 @@
  * @Author: Yorn Qiu
  * @Date: 2020-12-03 16:44:42
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2022-06-09 12:32:25
- * @Description: 数值格式化工具
+ * @LastEditTime: 2023-12-18 16:03:31
  * @FilePath: /vue3-ts-template/src/utils/numberUtils.ts
+ * @Description: number format utils 
  */
 
 interface FormatOption {
   type?: 'num' | 'percent' | 'flowNum';
   deg?: number;
-  kannma?: boolean;
+  comma?: boolean;
   autoUnit?: boolean;
   unit?: keyof typeof formatUnit;
 }
@@ -28,41 +28,29 @@ const formatUnit = {
 const numberUtils = {
   // 数值格式化的单位映射
   formatUnit,
+
   /**
-   * @description 增加千分位
-   * @param {number} value 数值
-   * @param {number} deg 保留小数点位数，默认2位，小于0时保持原有的小数位数
+   * @description 增加千位分隔符
+   * @param {number|string} value 数值
    * @return {string}
    */
-  addKannma(value: number, deg = 2): string {
-    let num = `${value}`;
-    num = num.replace(new RegExp(',', 'g'), '');
-    // 正负号处理
-    let symble = '';
-    if (/^([-+]).*$/.test(num)) {
-      symble = num.replace(/^([-+]).*$/, '$1');
-      num = num.replace(/^([-+])(.*)$/, '$2');
-    }
+  addComma(value: number | string): string {
+    let numStr = `${value}`;
+    if (numStr.includes('e')) numStr = this.unScientificNotation(numStr);
 
-    if (/^[0-9]+(\.[0-9]+)?$/.test(num)) {
-      num = num.replace(new RegExp('^[0]+', 'g'), '');
-      if (/^\./.test(num)) {
-        num = `0${num}`;
-      }
+    const matched = numStr.match(/^([-+])?([0-9]+)(\.[0-9]+)?$/);
+    if (matched) {
+      const symbol = matched[1] || ''; // 符号
+      let integer = matched[2]; // 整数部分
+      const decimal = matched[3] || ''; // 小数部分
 
-      const decimal = num.replace(/^[0-9]+(\.[0-9]+)?$/, '$1');
-      let integer = num.replace(/^([0-9]+)(\.[0-9]+)?$/, '$1');
-
+      // 添加逗号
       const re = /(\d+)(\d{3})/;
-
       while (re.test(integer)) {
         integer = integer.replace(re, '$1,$2');
       }
-      const result =
-        symble +
-        integer +
-        (decimal && decimal.length > 3 ? this.toFixed(parseFloat(decimal), deg).substring(1) : decimal);
-      return result === '' ? '0' : result;
+
+      return symbol + integer + decimal;
     }
 
     return `${value}`;
@@ -70,26 +58,21 @@ const numberUtils = {
   /**
    * @description 数值格式化
    * @param {number} value 数值
-   * @param {object} option 格式化参数集合, 默认增加千分位,保留2位小数
+   * @param {object} option 格式化参数集合，默认增加千位分隔符，保留2位小数
    * @param {string} option.type 格式化类型 num 数值, percent 百分比, flowNum 容量
    * @param {number} option.deg 保留几位小数
-   * @param {boolean} option.kannma 是否增加千分位
+   * @param {boolean} option.comma 是否增加千位分隔符
    * @param {boolean} option.autoUnit 是否自动进行数值单位换算
    * @param {number} option.unit 指定单位换算值
    * @return {string}
    */
-  format(value: number | string | undefined | null, option: FormatOption): string {
+  format(value: number | string | null | undefined, option?: FormatOption): string {
     if (Number.isNaN(value) || value === Infinity || value === -Infinity || value === undefined || value === null) {
       return '-';
     }
     if (!Number.isNaN(value)) {
-      if (!option) {
-        option = {
-          type: 'num',
-          deg: 2,
-          kannma: true,
-        };
-      }
+      option = option || { type: 'num', deg: 2, comma: true };
+
       value = Number(value);
       const deg = option.deg || 0;
 
@@ -108,22 +91,23 @@ const numberUtils = {
           return `${value}`;
         }
 
-        let formatedValue;
-        if (option.unit) {
-          formatedValue = value / option.unit;
-        }
-        formatedValue = this.toFixed(value, deg);
-        if (option.kannma) {
-          formatedValue = this.addKannma(value, deg);
-        }
-        if (option.unit) {
-          formatedValue += this.formatUnit[option.unit];
-        }
+        let formatedValue: number | string = value;
+        // 单位换算
+        if (option.unit) formatedValue /= option.unit;
+        // 固定小数位数
+        formatedValue = this.toFixed(formatedValue, deg);
+        // 千位分隔符
+        if (option.comma) formatedValue = this.addComma(formatedValue);
+        // 加上单位
+        if (option.unit) formatedValue += this.formatUnit[option.unit];
+
         return formatedValue;
       }
+
       if (option.type === 'percent') {
         return `${this.toFixed(value * 100, deg)}%`;
       }
+
       if (option.type === 'flowNum') {
         const datum = 1;
         if (Math.abs(value / 1024 ** 4) >= datum) {
@@ -143,41 +127,59 @@ const numberUtils = {
     }
     return `${value}`;
   },
+
   /**
    * @description: 保留小数位，使用toFixed方法固定小数位数
    * @param {number} value 数值
-   * @param {number} deg 位数，小于0时保持原有的小数位数
+   * @param {number} deg 小数位数，小于0时保持原有的小数位数
    * @return {string}
    */
   toFixed(value: number, deg: number): string {
-    if (deg < 0) {
-      return `${value}`;
-    }
-    let strNum = `${value}`;
-    const match = strNum.match(/\.(\d+)/);
+    let numStr = `${value}`;
+    if (numStr.includes('e')) numStr = this.unScientificNotation(numStr);
+    if (deg < 0) return numStr;
+
+    const match = numStr.match(/\.(\d+)/);
     if (match && match[1].length < deg) {
       for (let i = 0; i < deg - match[1].length; i += 1) {
-        strNum += '0';
+        numStr += '0';
       }
-      return strNum;
+      return numStr;
     }
     return value.toFixed(deg);
   },
+
   /**
-   * @description: 金额类格式化，增加千分位并保留两位小数
+   * 将科学计数法形式转化为一般形式的数字字符串
+   * @param {string|number} value
+   * @return {string}
+   */
+  unScientificNotation(value: string | number): string {
+    const number = typeof value === 'number' ? value : parseFloat(value);
+    const exponential = number.toExponential(); // 转换为标准的科学计数法形式
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const matched = exponential.match(/\d(?:\.(\d*))?e([+-]\d+)/)!; // 分离出小数值和指数值
+    const fixed = (matched[1] || '').length - parseInt(matched[2]); // 得到小数位数
+    return number.toFixed(Math.max(0, fixed));
+  },
+
+  /**
+   * @description: 金额类格式化，增加千位分隔符并保留两位小数
    * @param {number} value 数值
-   * @param {boolean} isPercent 是否为百分数
-   * @param {object} option 其他适用于format的参数
+   * @param {boolean|FormatOption} option 是否为百分数，或者格式化参数
    * @return {string} 格式化后的数值为String
    */
-  financeFormat(value: number | string | undefined | null, isPercent = false, option: object): string {
+  financeFormat(value: number | string | null | undefined, option?: boolean | FormatOption): string {
+    if (typeof option === 'boolean') {
+      return this.format(value, { type: 'percent', comma: true, deg: 2 });
+    }
     return this.format(value, {
-      type: isPercent ? 'percent' : 'num',
-      kannma: true,
+      type: 'num',
+      comma: true,
       deg: 2,
       ...option,
     });
   },
 };
 
-export default numberUtils;
+export default Object.freeze(numberUtils);

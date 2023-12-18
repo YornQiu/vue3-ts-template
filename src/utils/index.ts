@@ -2,13 +2,13 @@
  * @Author: Yorn Qiu
  * @Date: 2020-12-16 15:35:55
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2021-12-10 17:51:33
- * @Description: 工具类
+ * @LastEditTime: 2023-12-18 16:06:10
  * @FilePath: /vue3-ts-template/src/utils/index.ts
+ * @Description: utils
  */
 
-import numberUtils from '@/utils/numberUtils';
-import validateUtils from '@/utils/validateUtils';
+import numberUtils from '@/utils/number-utils';
+import validateUtils from '@/utils/validate-utils';
 
 interface SelectFileOption {
   multiple?: boolean;
@@ -20,6 +20,8 @@ interface UploadFileOption {
   beforeUpload?: (params?: unknown) => void;
   onprogress?: (e?: ProgressEvent<EventTarget>) => void;
   params?: { [key: string]: string };
+  accept?: string;
+  fileField?: string;
 }
 
 interface DownloadFileAjaxOption {
@@ -29,15 +31,6 @@ interface DownloadFileAjaxOption {
   params?: string | object;
   onprogress?: (e?: ProgressEvent<EventTarget>) => void;
 }
-
-interface TreeNode {
-  id: string;
-  pid: string;
-  children?: TreeNode[];
-  [key: string]: any;
-}
-
-type Tree = TreeNode | TreeNode[];
 
 const utils = {
   /**
@@ -60,14 +53,14 @@ const utils = {
    * @param {string|object} value
    * @return {boolean}
    */
-  setItem(key: string, value: string | object): boolean {
+  setItem(key: string, value: string | number | object): boolean {
     if (this.isEmpty(key) || this.isVain(value)) {
       return false;
     }
     if (typeof value === 'object') {
       localStorage.setItem(key, JSON.stringify(value));
     } else {
-      localStorage.setItem(key, value);
+      localStorage.setItem(key, `${value}`);
     }
     return true;
   },
@@ -103,7 +96,7 @@ const utils = {
    * @return {string} uuid
    */
   uuid(): string {
-    const s = [];
+    const s: string[] = [];
     const hexDigits = '0123456789abcdef';
     for (let i = 0; i < 36; i++) {
       s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
@@ -116,12 +109,23 @@ const utils = {
   },
 
   /**
-   * @description: 判断浏览器类型是否为IE
-   * @return {boolean}
+   * @description: 生成21位nanoid
+   * @return {string}
    */
-  isIE(): boolean {
-    const userAgent = navigator.userAgent;
-    return userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1 && userAgent.indexOf('Opera') === -1;
+  id(): string {
+    return crypto.getRandomValues(new Uint8Array(21)).reduce((id, byte) => {
+      byte &= 63;
+      if (byte < 36) {
+        id += byte.toString(36); // `0-9a-z`
+      } else if (byte < 62) {
+        id += (byte - 26).toString(36).toUpperCase(); // `A-Z`
+      } else if (byte == 62) {
+        id += '_';
+      } else {
+        id += '-';
+      }
+      return id;
+    }, '');
   },
 
   /**
@@ -199,7 +203,7 @@ const utils = {
    * @return {promise} 包含请求结果的Promise对象
    */
   async uploadFile(url: string, option: UploadFileOption = {}): Promise<unknown> {
-    const { beforeSelect, beforeUpload, onprogress, params } = option;
+    const { beforeSelect, beforeUpload, onprogress, params, fileField } = option;
 
     beforeSelect && beforeSelect(params);
 
@@ -207,7 +211,7 @@ const utils = {
     const fd = new FormData();
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      fd.append('files', file, file.name);
+      fd.append(fileField || 'files', file, file.name);
     }
     params && Object.keys(params).forEach((k) => fd.append(k, params[k]));
 
@@ -287,110 +291,126 @@ const utils = {
    * @description: 文件下载
    * @param {string} fileName 文件名
    * @param {string|BlobPart} content 文件内容或文件地址
+   * @param {BlobPropertyBag} options 构造Blob的配置
    */
-  downloadFile(fileName: string, content: string | BlobPart) {
+  downloadFile(
+    fileName: string,
+    content: string | BlobPart,
+    options: BlobPropertyBag = { type: 'text/csv', endings: 'transparent' }
+  ) {
     const a = document.createElement('a');
     a.download = fileName;
     a.style.display = 'none';
 
+    let objectUrl;
+
     if (typeof content === 'string') {
       a.href = content; // content为文件地址
     } else {
-      const blob = new Blob([content]);
-      a.href = URL.createObjectURL(blob); // content为文件内容
+      const blob = new Blob([content], options);
+      objectUrl = a.href = URL.createObjectURL(blob); // content为文件内容
     }
 
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    objectUrl && URL.revokeObjectURL(objectUrl);
   },
 
   /**
-   * @description: 将扁平数组转化为树或森林
-   * @param {array} nodes 节点数组
-   * @param {string} id 节点的id字段，默认为id
-   * @param {string} pid 节点的父节点id字段，默认为pid
-   * @param {string} children 节点的子节点字段，默认为children
-   * @return {array} 树或森林
+   * 深复制
+   * @param value 值
+   * @returns
    */
-  generateTree(nodes: Array<TreeNode>, id = 'id', pid = 'pid', children = 'children'): Array<TreeNode> {
-    if (!Array.isArray(nodes)) {
-      return [];
+  cloneDeep<T = unknown>(value: T): T {
+    // 非object
+    if (typeof value !== 'object' || value == null || value instanceof Error) {
+      return value;
     }
 
-    const tree: TreeNode[] = [];
-    const treeMap: { [key: string]: TreeNode } = {};
-
-    for (const node of nodes) {
-      treeMap[node[id]] = node;
+    // dom
+    if (typeof window !== 'undefined' && (value instanceof Node || value instanceof HTMLCollection)) {
+      return value;
     }
 
-    for (const node of nodes) {
-      const pNode = treeMap[node[pid]];
-
-      if (pNode) {
-        (pNode[children] || (pNode[children] = [])).push(node);
+    const newValue: Record<string | number | symbol, unknown> = {};
+    const keys = Object.keys(value);
+    for (const key of keys) {
+      const val = value[key as keyof T];
+      if (typeof value !== 'object' || value == null || value instanceof Error) {
+        newValue[key] = val;
+      } else if (Array.isArray(val)) {
+        newValue[key] = val.map((item) => this.cloneDeep(item));
+      } else if (val instanceof Set) {
+        const newSet = new Set();
+        val.forEach((item) => {
+          newSet.add(this.cloneDeep(item));
+        });
+        newValue[key] = newSet;
+      } else if (val instanceof Map) {
+        const newMap = new Map();
+        val.forEach((item, key) => {
+          newMap.set(key, this.cloneDeep(item));
+        });
+        newValue[key] = newMap;
       } else {
-        tree.push(node);
+        newValue[key] = this.cloneDeep(val);
       }
     }
 
-    return tree;
+    return newValue as T;
   },
 
   /**
-   * @description: 广度优先遍历树
-   * @param {object|array} tree 树或森林
-   * @param {Function} handler 用来处理树节点的方法
+   * 日期格式化
+   * @param {string|number|undefined|null} date 可转化为Date的字符串或时间戳, 为空时返回当前时间
+   * @param {string} fmt 格式化字符串，默认为 yyyy-MM-dd HH:mm:ss
+   * @returns {string} 格式化后的日期字符串
    */
-  BFSTree(tree: Tree, handler: (node: TreeNode) => unknown) {
-    if (!tree || typeof tree !== 'object') return;
+  dateFormat(date?: string | number | null, fmt = 'yyyy-MM-dd HH:mm:ss'): string {
+    const dateObj = date ? new Date(date) : new Date();
+    const opt: Record<string, string> = {
+      'y+': dateObj.getFullYear().toString(), // 年
+      'M+': (dateObj.getMonth() + 1).toString(), // 月
+      'd+': dateObj.getDate().toString(), // 日
+      'H+': dateObj.getHours().toString(), // 时
+      'm+': dateObj.getMinutes().toString(), // 分
+      's+': dateObj.getSeconds().toString(), // 秒
+      'S+': dateObj.getMilliseconds().toString(), // 毫秒
+    };
 
-    const queue = Array.isArray(tree) ? [...tree] : [tree];
-    let node;
-
-    while (queue.length) {
-      node = queue.shift() as TreeNode;
-      handler && handler(node);
-      node.children && node.children.forEach((child: TreeNode) => queue.push(child));
+    for (const k in opt) {
+      const ret = new RegExp(`(${k})`).exec(fmt);
+      if (ret) {
+        fmt = fmt.replace(ret[1], ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, '0'));
+      }
     }
+    return fmt;
   },
 
-  /**
-   * @description: 广度优先遍历树
-   * @param {object|array} tree 树或森林
-   * @param {Function} handler 用来处理树节点的方法
-   */
-  DFSTree(tree: Tree, handler: (node: TreeNode) => unknown) {
-    if (!tree || typeof tree !== 'object') return;
-
-    const stack = Array.isArray(tree) ? [...tree] : [tree];
-    let node;
-
-    while (stack.length) {
-      node = stack.pop() as TreeNode;
-      handler && handler(node);
-      node.children && node.children.forEach((child: TreeNode) => stack.push(child));
-    }
+  setTheme(theme: string) {
+    const el = document.documentElement;
+    el.setAttribute('theme', theme);
+  },
+  getTheme() {
+    const el = document.documentElement;
+    return el.getAttribute('theme');
+  },
+  addThemeChangeEvent(callback: () => void) {
+    window.addEventListener('theme-change', callback);
+  },
+  triggerThemeChangeEvent() {
+    const event = new Event('theme-change');
+    window.dispatchEvent(event);
+  },
+  removeThemeChangeEvent(callback: () => void) {
+    window.removeEventListener('theme-change', callback);
   },
 
-  /**
-   * @description: 获取树中的某一个节点，得到一个节点后直接返回，不会继续查找
-   * @param {object|array} tree 树或森林
-   * @param {string} id 要获取的节点id
-   * @return {object|undefined} 要获取的节点，未找到时返回undefined
-   */
-  getTreeNode(tree: Tree, id: string): TreeNode | undefined {
-    if (!tree || typeof tree !== 'object') return;
-
-    const queue = Array.isArray(tree) ? [...tree] : [tree];
-    let node;
-
-    while (queue.length) {
-      node = queue.shift() as TreeNode;
-      if (node.id === id) return node;
-      node.children && node.children.forEach((child: TreeNode) => queue.push(child));
-    }
+  removeEmpty<T extends object>(obj: T): Partial<T> {
+    return Object.entries(obj)
+      .filter(([_, v]) => v !== undefined && v !== null && v !== '')
+      .reduce((pre, [k, v]) => ({ ...pre, [k]: v === Object(v) ? this.removeEmpty(v) : v }), {});
   },
 };
 
