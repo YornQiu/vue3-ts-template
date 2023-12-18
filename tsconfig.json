@@ -1,5 +1,5 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": ["*.d.ts", "src/**/*", "src/**/*.vue", "vite.config.*"],
   "compilerOptions": {
     "types": ["node", "element-plus/global"],
