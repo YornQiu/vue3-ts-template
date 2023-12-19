@@ -1,13 +1,13 @@
 /*
  * @Author: Yorn Qiu
- * @Date: 2022-02-15 17:51:32
+ * @Date: 2023-04-10 11:06:55
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2022-11-07 11:54:56
- * @Description: css variables
+ * @LastEditTime: 2023-12-19 14:13:37
  * @FilePath: /vue3-ts-template/src/styles/variables.css
+ * @Description: theme light
  */
 
- :root {
+:root {
   /* hsl value for calculate, same as --color */
   --h: 213;
   --s: 72%;
@@ -23,11 +23,11 @@
   --color-0: #19539a;
 
   /* background-color 背景色 */
-  --bg-color: #f8fbfe;
-  --bg-color-1: #f8fbfe;
-  --bg-color-2: #edf5fc;
+  --bg-color: #f9fbfe;
+  --bg-color-1: #f9fbfe;
+  --bg-color-2: #f3f6fc;
   --bg-color-3: #eaf2fb;
-  --bg-color-4: #e9f2fb;
+  --bg-color-4: #deeaf7;
   --bg-color-5: #d3e0ee;
   --bg-color-6: #cbd9e6;
   --bg-color-7: #c6d1dd;
@@ -49,9 +49,9 @@
   --border-color-darker: #cdd0d6;
 
   /* shadow 阴影 */
-  --shadow-color: rgba(0, 0, 0, 0.12);
-  --shadow-color-dark: rgba(0, 0, 0, 0.24);
-  --shadow-color-darker: rgba(0, 0, 0, 0.36);
+  --shadow-color: rgba(0, 0, 0, 0.24);
+  --shadow-color-dark: rgba(0, 0, 0, 0.36);
+  --shadow-color-darker: rgba(0, 0, 0, 0.48);
   --shadow-base: 0 0 4px var(--shadow-color);
 
   --base-color: #f0f2f5;
@@ -96,8 +96,8 @@
   /* background-color 背景色 */
   --bg-color: #1d2736;
   --bg-color-1: #1d2736;
-  --bg-color-2: #26354a;
-  --bg-color-3: #2b3c55;
+  --bg-color-2: #25354a;
+  --bg-color-3: #2a3c55;
   --bg-color-4: #2f4360;
   --bg-color-5: #334a6b;
   --bg-color-6: #375076;
@@ -130,7 +130,7 @@
   --base-color-extra-light: #212d3f;
   --base-color-dark: #293e60;
   --base-color-darker: #2e4876;
-  --base-color-blank: #212d3f;
+  --base-color-blank: #202d3f;
 
   --color-white: #1d2736;
   --color-black: #f7fbff;
