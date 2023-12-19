@@ -2,7 +2,7 @@
  * @Author: Yorn Qiu
  * @Date: 2020-12-16 15:35:55
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2023-12-18 16:45:43
+ * @LastEditTime: 2023-12-19 14:05:11
  * @FilePath: /vue3-ts-template/src/utils/index.ts
  * @Description: utils
  */
@@ -301,13 +301,8 @@ const utils = {
    * @description: 文件下载
    * @param {string} fileName 文件名
    * @param {string|BlobPart} content 文件内容或文件地址
-   * @param {BlobPropertyBag} options 构造Blob的配置
    */
-  downloadFile(
-    fileName: string,
-    content: string | BlobPart,
-    options: BlobPropertyBag = { type: 'text/csv', endings: 'transparent' },
-  ) {
+  downloadFile(fileName: string, content: string | BlobPart) {
     const a = document.createElement('a');
     a.download = fileName;
     a.style.display = 'none';
@@ -316,9 +311,11 @@ const utils = {
 
     if (typeof content === 'string') {
       a.href = content; // content为文件地址
+    } else if (content instanceof Blob) {
+      objectUrl = a.href = URL.createObjectURL(content); // content为Blob对象
     } else {
-      const blob = new Blob([content], options);
-      objectUrl = a.href = URL.createObjectURL(blob); // content为文件内容
+      const blob = new Blob([content]); // content为ArrayBuffer等
+      objectUrl = a.href = URL.createObjectURL(blob);
     }
 
     document.body.appendChild(a);

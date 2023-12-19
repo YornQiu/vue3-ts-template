@@ -2,9 +2,9 @@
  * @Author: Yorn Qiu
  * @Date: 2022-02-25 17:02:56
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2023-05-22 13:57:16
- * @Description: http
+ * @LastEditTime: 2023-12-19 13:52:47
  * @FilePath: /vue3-ts-template/src/libs/http.ts
+ * @Description: http
  */
 
 import type { AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse, Method, ResponseType } from 'axios';

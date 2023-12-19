@@ -2,9 +2,9 @@
  * @Author: YornQiu
  * @Date: 2021-05-14 17:01:47
  * @LastEditors: Yorn Qiu
- * @LastEditTime: 2023-05-22 13:53:48
- * @Description: global components
+ * @LastEditTime: 2023-12-19 13:53:01
  * @FilePath: /vue3-ts-template/src/components/index.ts
+ * @Description: global components
  */
 
 import type { App, Component } from 'vue';
